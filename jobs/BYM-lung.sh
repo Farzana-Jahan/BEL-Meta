@@ -3,7 +3,7 @@
 #PBS -N SBEL-lung-male
 #PBS -l ncpus=3
 #PBS -l mem=100GB
-#PBS -l walltime=48:00:00
+#PBS -l walltime=96:00:00
 #PBS -l cpuarch=avx2
 #PBS -o SBEL-lung-male_stdout.out
 #PBS -e SBEL-lung-male_stderr.out
