@@ -5,8 +5,8 @@
 #PBS -l mem=100GB
 #PBS -l walltime=96:00:00
 #PBS -l cpuarch=avx2
-#PBS -o SBEL-lung-male-ind_stdout.out
-#PBS -e SBEL-lung-male-ind_stderr.out
+#PBS -o SBEL-lung-male-porter_stdout.out
+#PBS -e SBEL-lung-male-porter_stderr.out
 
 # More info on PBS directives can be found here
 # http://qcd.phys.cmu.edu/QCDcluster/pbs/run_serial.html
