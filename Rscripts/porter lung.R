@@ -81,7 +81,7 @@ clusterEvalQ(cl=cluster,library(BELSpatial))
 clusterExport(cl=cluster,varlist = c("y","x","n","p","var","beta_init", "psi_init", "tau_init"
                                      ,"B","B_plus","q","M","MBM", "wi"))
 
-Porter_lung_male<-clusterApply(cl=cluster, x=1:3, fun= function(z){BSHEL(y,x,n,p,q,var,niter=100,beta_init, 
+Porter_lung_male<-clusterApply(cl=cluster, x=1:3, fun= function(z){BSHEL(y,x,n,p,q,var,niter=10000,beta_init, 
                                                                          psi_init, tau_init,M,MBM, wi, 
                                                                          sd_psi=0.001, 
                                                                          sd_beta=0.001, sd_tau=0.2)})
