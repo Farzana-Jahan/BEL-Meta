@@ -133,7 +133,7 @@ for(i in 2:2148){
 tau_ind_BEL<-SBEL_ind_all_lung_male[[4]]
 theta<-t(Beta_ind_SBEL)%*%t(x)+psi_ind_SBEL
 #pred_BEL_ind<-colMeans(theta)
-WAIC_ind_BEL<-get.WAIC.BEL(theta=theta,y=y,x=x)
+WAIC_ind_BEL<-get.WAIC.BEL(theta=exp(theta),y=y,x=x)
 
 # Calculation of rank and probabilities
 #ranking theta's for all iterations
