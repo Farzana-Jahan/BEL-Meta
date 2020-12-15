@@ -2,7 +2,7 @@
 
 #PBS -N SBEL-lung-female
 #PBS -l ncpus=3
-#PBS -l mem=100GB
+#PBS -l mem=20GB
 #PBS -l walltime=72:00:00
 #PBS -l cpuarch=avx2
 #PBS -o SBEL-lung-female_stdout.out
