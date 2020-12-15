@@ -41,7 +41,7 @@ p<- dim(x)[2] # no. of covariates
 alpha_1<-1 # hyperparamter for tau prior
 alpha_2<-0.01 # hyperparamter for tau prior
 tau_inv_init<- rgamma(1,alpha_1,alpha_2) # using IG prior(1,1) for tau_inv
-tau_init<- 1/tau_inv_init
+tau_init<- SBEL_BYM_lung_male[[1]]
 g<- 10# G prior evaluated at 10 for regression coefficients' prior (Zellner prior)
 prior_mean_beta<- rep(0,p) # p is the number of regression parameters, in case of one covariate, p=2
 beta_init<- rnorm(3,prior_mean_beta, (1/g)*tau_inv_init)
@@ -66,7 +66,7 @@ cluster<-makeCluster(3)
 #clusterEvalQ(cl=cluster,.libPaths("c:/software/Rpackages"))
 clusterEvalQ(cl=cluster,library(BELSpatial))
 clusterExport(cl=cluster,varlist = c("y","x","n","p","var","beta_init", "psi_init", "tau_init","R", "wi"))
-SBEL_BYM_lung_female<-clusterApply(cl=cluster, x=1:3, function(z){BEL_leroux_new(y,x,n,p,var,rho=1,niter=100,
+SBEL_BYM_lung_female<-clusterApply(cl=cluster, x=1:3, function(z){BEL_leroux_new(y,x,n,p,var,rho=1,niter=10000,
                                                                                  beta_init, psi_init, tau_init,R, wi, sd_psi=0.003, 
                                                                                  sd_beta=0.0008, sd_tau=0.5)})
 save(SBEL_BYM_lung_female,file="Results/SBEL_BYM_lung_female_10000.RData")
