@@ -32,11 +32,12 @@ lung_data_final2<-lung_data_final2%>%
 lung_data_final2$regions[lung_data_final2$regions==3]<-2
 lung_data_final2$regions[lung_data_final2$regions==4]<-3
 # for males
-y<- exp(lung_data_final2$y.lung.male)
+y<- lung_data_final2$y.lung.male
 n<- length(y) # no. of observations
 lung_data_final2<-mutate(lung_data_final2,cities=ifelse(lung_data_final2$regions==1,1,0))
 lung_data_final2<-mutate(lung_data_final2,regional=ifelse(lung_data_final2$regions==2,1,0))
-x<- cbind(1,lung_data_final2$cities,lung_data_final2$regional)
+lung_data_final2<-mutate(lung_data_final2,remote=ifelse(lung_data_final2$regions==3,1,0))
+x<- cbind(lung_data_final2$cities,lung_data_final2$regional,lung_data_final2$remote)
 p<- dim(x)[2] # no. of covariates
 alpha_1<-1 # hyperparamter for tau prior
 alpha_2<-0.01 # hyperparamter for tau prior
@@ -47,14 +48,14 @@ prior_mean_beta<- rep(0,p) # p is the number of regression parameters, in case o
 beta_init<- rnorm(3,prior_mean_beta, (1/g)*tau_inv_init)
 wi_init<- 1/length(y) # y be the response variable from the data
 psi_init <- rep(0,n)
-var<- exp(lung_data_final2$sd.lung.male)
+var<- lung_data_final2$sd.lung.male^2
 # calculating MELE of Beta, beta_mele
 wi=wi_init
 # using gmm package to calculate initial values of beta
-g<- log(y)~ x[,2]+x[,3]
-H<-x[,-1]
+g<- y ~ x[,1]+x[,2]+x[,3]-1
+H<-x
 beta_mele<- unname(gel(g,H,c(0,0,0))$coefficients)
-mu_init<- exp(x%*% beta_mele + psi_init)
+mu_init<- x%*% beta_mele + psi_init
 beta_init<-beta_mele
 wi_mu<- el.test(y-mu_init,0)$wts # computing el weights using emplik package
 wi_mu<-wi_mu/sum(wi_mu) # sum(wi) = 1 and wi>0 constraints 
@@ -66,8 +67,9 @@ cluster<-makeCluster(3)
 #clusterEvalQ(cl=cluster,.libPaths("c:/software/Rpackages"))
 clusterEvalQ(cl=cluster,library(BELSpatial))
 clusterExport(cl=cluster,varlist = c("y","x","n","p","var","beta_init", "psi_init", "tau_init","R", "wi"))
-SBEL_ind_lung_male<-clusterApply(cl=cluster, x=1:3, function(z){BEL_leroux_new(y,x,n,p,var,rho=0,niter=10000,
-                                                                               beta_init, psi_init, tau_init,R, wi, sd_psi=0.01, 
-                                                                               sd_beta=0.001, sd_tau=0.5)})
-save(SBEL_ind_lung_male,file="Results/SBEL_ind_lung_male_10000.RData")
+SBEL_ind_lung_male<-clusterApply(cl=cluster, x=1:3, function(z){BEL_leroux_new(y,x,n,p,var,rho=0,niter=5000,
+                                                                               beta_init, psi_init, tau_init,R, wi, sd_psi=0.02, 
+                                                                               sd_beta=0.003, sd_tau=0.4)})
+save(SBEL_ind_lung_male,file="Results/SBEL_ind_lung_male_5000.RData")
+
 
