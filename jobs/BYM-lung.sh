@@ -2,8 +2,8 @@
 
 #PBS -N SBEL-lung-male
 #PBS -l ncpus=3
-#PBS -l mem=20GB
-#PBS -l walltime=56:00:00
+#PBS -l mem=15GB
+#PBS -l walltime=36:00:00
 #PBS -l cpuarch=avx2
 #PBS -o SBEL-lung-male_stdout.out
 #PBS -e SBEL-lung-male_stderr.out
@@ -76,7 +76,7 @@ run_program(){
   #make sure we change to the current directory
   #where this bash job script is
   cd $PBS_O_WORKDIR
-  Rscript "Rscripts/SBEL BYM lung male2.R" 
+  Rscript "Rscripts/SBEL BYM lung male.R" 
   #this script installed all of the packages locally,
   #since you do not have root access to HPC.
   #This just means we need to let R now where we installed
