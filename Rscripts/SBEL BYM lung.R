@@ -66,7 +66,7 @@ cluster<-makeCluster(3)
 #clusterEvalQ(cl=cluster,.libPaths("c:/software/Rpackages"))
 clusterEvalQ(cl=cluster,library(BELSpatial))
 clusterExport(cl=cluster,varlist = c("y","x","n","p","var","beta_init", "psi_init", "tau_init","R", "wi"))
-SBEL_BYM_lung_male<-clusterApply(cl=cluster, x=1:3, function(z){BEL_leroux_new(y,x,n,p,var,rho=1,niter=100,
+SBEL_BYM_lung_male<-clusterApply(cl=cluster, x=1:3, function(z){BEL_leroux_new(y,x,n,p,var,rho=1,niter=5000,
                                                                                       beta_init, psi_init, tau_init,R, wi, sd_psi=0.003, 
                                                                                       sd_beta=0.001, sd_tau=0.5)})
 save(SBEL_BYM_lung_male,file="Results/SBEL_BYM_lung_male_5000.RData")
