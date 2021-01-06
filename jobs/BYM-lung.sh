@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-#PBS -N SBEL-lung-male
+#PBS -N SBEL-lung-male-BYM
 #PBS -l ncpus=3
 #PBS -l mem=15GB
 #PBS -l walltime=36:00:00
 #PBS -l cpuarch=avx2
-#PBS -o SBEL-lung-male_stdout.out
-#PBS -e SBEL-lung-male_stderr.out
+#PBS -o SBEL-lung-male-BYM_stdout.out
+#PBS -e SBEL-lung-male-BYM_stderr.out
 
 # More info on PBS directives can be found here
 # http://qcd.phys.cmu.edu/QCDcluster/pbs/run_serial.html
@@ -76,7 +76,7 @@ run_program(){
   #make sure we change to the current directory
   #where this bash job script is
   cd $PBS_O_WORKDIR
-  Rscript "Rscripts/SBEL BYM lung male.R" 
+  Rscript "Rscripts/SBEL BYM lung.R" 
   #this script installed all of the packages locally,
   #since you do not have root access to HPC.
   #This just means we need to let R now where we installed
