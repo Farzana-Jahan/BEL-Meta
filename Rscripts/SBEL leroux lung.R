@@ -70,6 +70,29 @@ clusterExport(cl=cluster,varlist = c("y","x","n","p","var","beta_init", "psi_ini
 SBEL_leroux_lung_male<-clusterApply(cl=cluster, x=1:3, function(z){BEL_leroux_new(y,x,n,p,var,rho=0.97,niter=5000,
                                                                                beta_init, psi_init, tau_init,R, wi, sd_psi=0.003, 
                                                                                sd_beta=0.0006, sd_tau=0.5)})
-save(SBEL_leroux_lung_male,file="Results/SBEL_BYM_lung_male_5000.RData")
+save(SBEL_leroux_lung_male,file="Results/SBEL_leroux_lung_male_5000.RData")
+tau_init<- mean(c(SBEL_leroux_lung_male[[1]]$tau[5000],SBEL_leroux_lung_male[[2]]$tau[5000],
+                  SBEL_leroux_lung_male[[3]]$tau[5000]))
+g<- 10# G prior evaluated at 10 for regression coefficients' prior (Zellner prior)
+prior_mean_beta<- rep(0,p) # p is the number of regression parameters, in case of one covariate, p=2
+beta_init<- colMeans(matrix(c(SBEL_leroux_lung_male[[1]]$Beta[,5000],SBEL_leroux_lung_male[[2]]$Beta[,5000],
+                              SBEL_leroux_lung_male[[3]]$Beta[,5000]),nrow=3,byrow = F))
+# y be the response variable from the data
+psi_init <- colMeans(matrix(c(SBEL_leroux_lung_male[[1]]$psi[,5000],SBEL_leroux_lung_male[[2]]$psi[,5000],
+                              SBEL_leroux_lung_male[[3]]$psi[,5000]),nrow=2148,byrow = F))
 
+# calculating MELE of Beta, beta_mele
+
+# using gmm package to calculate initial values of beta
+mu_init<- x%*% beta_init+ psi_init
+wi_mu<- el.test(y-mu_init,0)$wts # computing el weights using emplik package
+wi<-wi_mu/sum(wi_mu) # sum(wi) = 1 and wi>0 constraints 
+
+#clusterEvalQ(cl=cluster,.libPaths("c:/software/Rpackages"))
+clusterEvalQ(cl=cluster,library(BELSpatial))
+clusterExport(cl=cluster,varlist = c("y","x","n","p","var","beta_init", "psi_init", "tau_init","R", "wi"))
+SBEL_leroux_lung_male2<-clusterApply(cl=cluster, x=1:3, function(z){BEL_leroux_new(y,x,n,p,var,rho=0.97,niter=5000,
+                                                                                beta_init, psi_init, tau_init,R, wi, sd_psi=0.003, 
+                                                                                sd_beta=0.0006, sd_tau=0.5)})
+save(SBEL_leroux_lung_male2,file="Results/SBEL_leroux_lung_male_10000.RData")
 
